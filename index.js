@@ -9,8 +9,8 @@ var polls = require('./polls.js');
 
 app.use('/user', user);
 app.use('/',dashboard);//Default or welcome page lands to Dashboard page
-app.use('/userpolls',dashboard);
-app.use('/polls',dashboard);
+app.use('/userpolls',userpolls);
+app.use('/polls',polls);
 
 
 //this below code is to handle any error
