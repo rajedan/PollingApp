@@ -14,6 +14,7 @@ Below are the softwares and tools you need to install before contributing/runnin
 ### How to Contribute
 
 * Install all Prerequisites
+* Fork the project
 * Clone the repository
 * Open Terminal and go to PollingApp directory and Run ``` npm install --save``` This fetch all the node module dependecy. Make sure you do not push this while contributing to project
 * Start server using ```nodemon index.js```
