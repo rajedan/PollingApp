@@ -1,0 +1,18 @@
+{
+  "name": "pollingapp",
+  "version": "1.0.0",
+  "description": "This is an polling web application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "rajesh",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "handlebars": "^4.0.11",
+    "mongodb": "^2.2.33",
+    "nodemon": "^1.12.1"
+  }
+}
