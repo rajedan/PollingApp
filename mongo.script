@@ -1,0 +1,25 @@
+mongo
+use pollingapp
+db.createCollection("users")
+db.createCollection("polls")
+db.users.insertOne({
+  emailid: "user@example.com",
+  name: "fname lname",
+  mnumber: "9658741325",
+  password: "secretepwd"
+});
+db.polls.insertOne({
+  createdby: "user@example.com",
+  question: "question 1 In Detail",
+  options: [
+    {
+      option: "This is option 1",
+      count: 0
+    },
+    {
+      option: "This is option 2",
+      count: 0
+    }
+  ]
+});
+exit

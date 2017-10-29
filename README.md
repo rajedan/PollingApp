@@ -17,7 +17,10 @@ Below are the softwares and tools you need to install before contributing/runnin
 * Fork the project
 * Clone the repository
 * Open Terminal and go to PollingApp directory and Run ``` npm install --save``` This fetch all the node module dependecy. Make sure you do not push this while contributing to project
-* Start server using ```nodemon index.js```
+* Start the mongodb server by running the command in terminal ```sudo service mongod start``` Windows user can normally start the mongodb.Please refere [here](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/) for details
+* Once the server is started, Start the mongo shell(For Ubuntu type mongo in terminal, for windows use Robo3T/RoboMongo) Now open the ```mongo.script``` file of this project and copy the content and paste it in mongo shell. Make sure all commands run successfully.
+* Now you are ready with DB, Collections and some sample dummy data ready into your mongodb
+* Go to project folder and Start server using ```nodemon index.js```
 * We are using nodemon plugin so you no need to restart the server for any changes, it automatically restarts the server after saving any changes.
 * Boom..! That's it! Now start coding :)
 
