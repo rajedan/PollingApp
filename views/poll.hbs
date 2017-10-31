@@ -1,0 +1,17 @@
+<form action="/vote">
+<div class="text-center clearfix">
+  <h3>Question : {{question}}</h3>
+  <div class="btn-group" data-toggle="buttons">
+    {{#each options}}
+      <label class="btn btn-default">
+      <input type="radio" name="options" id="option1" autocomplete="off">{{this.option}}
+    </label>
+      <br>
+      <br>
+    {{/each}}
+  </div>
+</div>
+<div class="text-center">
+  <button class="btn btn-success" type="submit" name="Submit" value="Submit">Submit</button>
+</div>
+</form>

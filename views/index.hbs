@@ -1,0 +1,20 @@
+{{#if hasError}}
+  <div class="text-center alert alert-warning">
+    <h4>{{message}}</h4>
+  </div>
+{{else}}
+
+  <h3 class="text-center">List of Ongoing Polls {{text}}</h3>
+  <div class="list-group">
+    {{#each polls}}
+      <a href="/polls/{{this._id}}" class="list-group-item list-group-item-info clearfix">
+        <h4 class="list-group-item-heading">{{this.question}}</h4>
+        <input type="hidden" id="id" value="{{this._id}}"/>
+        <!--facebook share link <div class="fb-share-button" data-layout="button_count" data-size="small" data-mobile-iframe="true"><a class="fb-xfbml-parse-ignore" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u&amp;src=sdkpreparse">Share</a></div> -->
+        <p class="list-group-item-text pull-right text-muted">Created by {{this.createdby}}</p>
+      </a>
+      <br>
+    {{/each}}
+  </div>
+
+{{/if}}
