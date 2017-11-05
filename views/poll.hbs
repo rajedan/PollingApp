@@ -1,17 +1,24 @@
-<form action="/vote">
-<div class="text-center clearfix">
-  <h3>Question : {{question}}</h3>
-  <div class="btn-group" data-toggle="buttons">
-    {{#each options}}
-      <label class="btn btn-default">
-      <input type="radio" name="options" id="option1" autocomplete="off">{{this.option}}
-    </label>
+<div class="col-md-3"></div>
+<div class="col-md-6">
+  <div class="jumbotron jumbotron-fluid" style="border-style:solid;">
+
+    <form action="/vote">
+      <div class="text-center clearfix">
+        <h3>Question : {{question}}</h3>
+        <div class="btn-group" data-toggle="buttons">
+          {{#each options}}
+            <label class="btn btn-default btn-block" style="margin-bottom:5px;white-space: normal;">
+                <input type="radio" name="options" id="option1" autocomplete="off">{{this.option}}
+            </label>
+          {{/each}}
+        </div>
+      </div>
       <br>
-      <br>
-    {{/each}}
+      <div class="text-center">
+        <button class="btn btn-success" type="submit" name="Submit" value="Submit">Submit</button>
+      </div>
+    </form>
+
   </div>
 </div>
-<div class="text-center">
-  <button class="btn btn-success" type="submit" name="Submit" value="Submit">Submit</button>
-</div>
-</form>
+<div class="col-md-3"></div>

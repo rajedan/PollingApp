@@ -2,11 +2,18 @@
 var express = require('express');
 var path = require('path');
 var exphbs = require('express-handlebars');
+var bodyParser = require('body-parser');
 var user = require('./user.js');
 var dashboard = require('./dashboard.js');
 var userpolls = require('./userpolls.js');
 var polls = require('./polls.js');
 var app = express();
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+app.use(express.static(path.join(__dirname,'public')));
 //view engine setup
 app.engine('.hbs',exphbs({defaultLayout: 'layout', extname: '.hbs'}));
 app.set('view engine', '.hbs');
