@@ -20,7 +20,8 @@ router.get('/', function(req,response){
  //res.send('Hello, this is dashboard page');
  var error;
  var polls;
- db.collection("polls").find().toArray(function(err, res){
+ var mysort = {_id:-1};
+ db.collection("polls").find().sort(mysort).toArray(function(err, res){
    if(err){
      hasError = true;
      error = "Error connecting to the DB/ loading data from DB";

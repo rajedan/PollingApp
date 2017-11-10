@@ -37,9 +37,6 @@ router.post('/create', function(req, res) {
   jsonData['createdby'] = 'test-user';
   jsonData['options'] = [];
   for (var key in allData) {
-    // if (key == 'question') {
-    // jsonData[key] = allData[key];
-    // } else {
     if (key.includes('option')) {
       var optionCount = {};
       optionCount['option'] = allData[key];
@@ -53,39 +50,89 @@ router.post('/create', function(req, res) {
     if (error) {
       res.render('error', {
         message: "Fatal error!",
-        status: 404,
-        stack: error
+        status: false
       });
       //throw error;
     }
-    var msg = result.insertedCount == 1 ? "Poll has been successfully created!" : "Failed to create poll, please try again!";
+    var isInserted = result.insertedCount == 1;
+    //var status = isInserted ? 201 : 500;//201 if inserted else 500
+    var msg =  isInserted ? "Poll has been successfully created!" : "Failed to create poll, please try again!";
     res.render('error', {
       message: msg,
-      status: 201
+      status: isInserted
     });
     // res.send(msg);
   })
   //res.send('The poll has been created!');
 });
 
-router.get('/participate', function(req, res) {
-  res.send('Hello, this is the page to participate in poll');
-});
-
-
-router.get('/pollresult', function(req, res) {
-  res.send('Hello, this is poll result page showing single poll result');
+router.get('/pollresult/:id([a-z0-9]{24})', function(req, res) {
+  //res.send('Hello, this is poll result page showing single poll result');
+  console.log("in result");
+  //res.send("in result page");
+  var query = {
+    _id: new mongo.ObjectId(req.params.id)
+  };
+  db.collection("polls").findOne(query, function(errr, result) {
+    if (errr) {
+      throw errr; //handle the situation here when no poll will be found
+      res.render('error', {
+        message: "Something went wrong, please check with poll-creater whether the poll exist!",
+        status: false
+      });
+    }
+    //result = JSON.parse(result);
+     res.render('result', {
+       result: result,
+       helpers: { json: function (context) { return JSON.stringify(context); }}
+     });
+  });
 });
 
 router.get('/:id([a-z0-9]{24})', function(req, res) {
-  var del = {
+  var query = {
     _id: new mongo.ObjectId(req.params.id)
   };
-  db.collection("polls").findOne(del, function(errr, result) {
+  db.collection("polls").findOne(query, function(errr, result) {
     if (errr) throw errr; //handle the situation here when no poll will be found
     res.render('poll', result);
   });
 })
 
+//this is function for update of the counts after voting
+router.post('/vote', function(req, res){
+  console.log(req.body);
+  var query = {
+    _id: new mongo.ObjectId(req.body.id)
+  };
+  db.collection("polls").findOne(query, function(errr, result) {
+    if (errr) throw errr; //handle the situation here when no poll will be found/deleted
+    result.options.forEach(function(value){
+      console.log(value);
+      if(value.option==req.body.option){
+        //console.log("got the value : "+value.option+req.body.option);
+        value.count = value.count+1;
+      }
+    });
+    console.log(result);
+    db.collection("polls").updateOne(query, result, function(errr,updateRes){
+           if(errr) throw errr;
+           console.log(updateRes.modifiedCount);
+           if (errr) {
+             res.render('error', {
+               message: "Fatal error! Your vote was not logged.",
+               status: false
+             });
+           }
+           var isInserted = updateRes.modifiedCount == 1;
+           var msg =  isInserted ? "Your precious vote has been successfully logged!" : "Failed to log your vote, please check with creater, whether poll exist!";
+           res.render('error', {
+             message: msg,
+             status: isInserted
+           });
+         });
+  });
+  //res.send('after vote');
+});
 //This is to export this module to use in index.js
 module.exports = router;

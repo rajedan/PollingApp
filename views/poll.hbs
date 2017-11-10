@@ -2,20 +2,23 @@
 <div class="col-md-6">
   <div class="jumbotron jumbotron-fluid" style="border-style:solid;">
 
-    <form action="/vote">
+    <form action="vote" method="post">
       <div class="text-center clearfix">
+        <input type="hidden" name="id" id="pollId" value='{{this._id}}'>
         <h3>Question : {{question}}</h3>
         <div class="btn-group" data-toggle="buttons">
           {{#each options}}
             <label class="btn btn-default btn-block" style="margin-bottom:5px;white-space: normal;">
-                <input type="radio" name="options" id="option1" autocomplete="off">{{this.option}}
+                <input type="radio" name="option" id="option1" autocomplete="off" value='{{this.option}}'>{{this.option}}
             </label>
           {{/each}}
         </div>
       </div>
       <br>
       <div class="text-center">
-        <button class="btn btn-success" type="submit" name="Submit" value="Submit">Submit</button>
+        <button class="btn btn-danger" type="button" name="cancel" value="Submit" id="cancel">Cancel</button>
+        <button class="btn btn-success" type="submit" name="submit" value="Submit" id="submit">Submit</button>
+        <button class="btn btn-warning" type="button" name="result" value="Submit" id="result">Result</button>
       </div>
     </form>
 
