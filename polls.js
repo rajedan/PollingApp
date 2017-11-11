@@ -102,20 +102,19 @@ router.get('/:id([a-z0-9]{24})', function(req, res) {
 
 //this is function for update of the counts after voting
 router.post('/vote', function(req, res){
-  console.log(req.body);
   var query = {
     _id: new mongo.ObjectId(req.body.id)
   };
   db.collection("polls").findOne(query, function(errr, result) {
     if (errr) throw errr; //handle the situation here when no poll will be found/deleted
     result.options.forEach(function(value){
-      console.log(value);
+
       if(value.option==req.body.option){
         //console.log("got the value : "+value.option+req.body.option);
         value.count = value.count+1;
       }
     });
-    console.log(result);
+
     db.collection("polls").updateOne(query, result, function(errr,updateRes){
            if(errr) throw errr;
            console.log(updateRes.modifiedCount);

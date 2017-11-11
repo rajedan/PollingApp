@@ -40,11 +40,7 @@ passport.deserializeUser(function(useremailid, done) {
 
 passport.use(new LocalStrategy(
   function(username, password, done) {
-    console.log('user:'+username+'pwd:'+password);
     db.collection("users").findOne({emailid:username, password:password},function(userErr,userDomain){
-         //console.log(res.name+"-"+res.emailid+"-"+res.password);
-         console.log('userErr:'+userErr);
-         console.log('userDom:'+userDomain);
          if(userErr) { return done(userErr); }
          if (!userDomain) {
            console.log('User not found');
@@ -70,7 +66,6 @@ router.post('/signup', function(req, res) {
   var email = req.body.email;
   var password = req.body.password;
   var confirmPassword = req.body.confirmPassword;
-  console.log(name + '-' + email + '-' + password + '-' + confirmPassword);
   req.checkBody('name', 'Name cannot be blank').notEmpty();
   req.checkBody('email', 'Please enter valid email id').isEmail();
   req.checkBody('password', 'Password must have min 6 and max 18 characters').isLength({
@@ -83,17 +78,13 @@ router.post('/signup', function(req, res) {
     res.render('register', {
       errors: errors
     });
-    console.log('yes');
   } else {
 
     //validate the email id whether email id is already taken or not, if not then register user
     db.collection('users').count({
       emailid: email.toLowerCase()
     }, function(userError, userResult) {
-      console.log("countt is:" + userResult);
       if (!errors && userResult > 0) {
-        console.log('throwing error');
-
         res.render('register', {
           errors: [{
             msg: ['User already exist with this Email']
@@ -129,7 +120,6 @@ router.post('/signup', function(req, res) {
         });
       }
     });
-    console.log('errors are:' + errors);
   }
 });
 
@@ -160,7 +150,6 @@ router.get('/mypolls', function(req, res) {
     if (err) {
       throw err;
     }
-    console.log(result);
     res.render('mypolls',{
       polls : result,
       helpers: { json: function (context) { return JSON.stringify(context); }}
@@ -175,8 +164,6 @@ router.get('/delete/:id([a-z0-9]{24})', function(req, res) {
   db.collection("polls").deleteOne(del, function(errr,obj){
    if(errr) throw errr;
    deletedCount = obj.deletedCount;
-   //console.log(obj.deletedCount);
-   //if(obj.deletedCount==1){res.render('mypolls')} else {res.render('mypolls')}
    var mysort = {_id:-1};
    db.collection("polls").find({createdby:req.user.emailid}).sort(mysort).toArray(function(err, result){
      if (err) {

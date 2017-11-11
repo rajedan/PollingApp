@@ -17,7 +17,6 @@ $(document).ready(function() {
   $("#removeBtn").click(function() {
     console.log("In remove, count is : " + count);
     if (count <= 2) {
-      //alert('You exceeded the minimum number of options');
       document.getElementById('errorMsg').innerHTML = 'You exceeded the minimum number of options';
       $('#myModal').modal({
         show: 'false'
@@ -27,10 +26,6 @@ $(document).ready(function() {
     $("#option" + count).remove();
     count--;
   });
-
-  // $("#submitSurvey").click(function(){
-  //   //alert('cout is : '+count);
-  // });
 
   function showModal(msg) {
     console.log("showing modal now : " + msg);
@@ -49,8 +44,9 @@ $(document).ready(function() {
     console.log("Poll id is:" + pollId);
     $(location).attr('href', '/polls/pollresult/'+pollId.value);
   });
-  var resultData = document.getElementById("resultData").value;
-
+  var resultData = document.getElementById("resultData");
+  if(resultData){
+  resultData = resultData.value;
   resultData = JSON.parse(resultData);
   console.log("resultData:" + resultData);
   console.log("resultData:" + resultData.question);
@@ -95,7 +91,7 @@ $(document).ready(function() {
     var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
     chart.draw(data, options);
   }
-
+}
 });
 function showPollDetail(obj){
   console.log('hi');
@@ -110,7 +106,4 @@ function showPollDetail(obj){
   $('#myPollModal').modal({
     show: 'false'
   });
-  // $('#myModal').modal({
-  //   show: 'false'
-  // });
 }
