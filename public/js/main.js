@@ -95,4 +95,22 @@ $(document).ready(function() {
     var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
     chart.draw(data, options);
   }
+
 });
+function showPollDetail(obj){
+  console.log('hi');
+  //console.log(obj);
+  obj = JSON.parse(obj);
+  document.getElementById('question').innerHTML = obj.question;
+  document.getElementById("pollDetail").innerHTML = "";
+  for(var i=0;i<obj.options.length;i++) {
+    document.getElementById("pollDetail").innerHTML += "Option "+(i+1)+" : "+obj.options[i].option;
+    document.getElementById("pollDetail").innerHTML += "<br>";
+  }
+  $('#myPollModal').modal({
+    show: 'false'
+  });
+  // $('#myModal').modal({
+  //   show: 'false'
+  // });
+}

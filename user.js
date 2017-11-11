@@ -1,11 +1,11 @@
 //This file is created to use for user management related js like login and signup js codes
 var express = require('express');
 var router = express.Router();
-var MongoClient = require('mongodb').MongoClient;
+var mongo = require('mongodb')
+var MongoClient = mongo.MongoClient;
 var passport = require('passport');//
 var flash    = require('connect-flash');
-var cookieParser = require('cookie-parser');
-var bodyParser   = require('body-parser');
+
 var session      = require('express-session');
 var LocalStrategy = require('passport-local').Strategy;//
 
@@ -13,10 +13,9 @@ var db;//
 var url = "mongodb://localhost:27017/pollingapp";
 var app = express();
 
-
-
-app.use(passport.initialize());
-app.use(passport.session());
+//app.use(session({ secret: "cats", resave: false, saveUninitialized: false }));
+//app.use(passport.initialize());
+//app.use(passport.session());
 app.use(flash());
 
 MongoClient.connect(url, function(err, dbConnection) {
@@ -28,6 +27,35 @@ MongoClient.connect(url, function(err, dbConnection) {
     db = dbConnection;
   }
 })
+//passport stuffs
+passport.serializeUser(function(user, done) {
+  done(null, user.emailid);
+});
+passport.deserializeUser(function(useremailid, done) {
+  db.collection("users").findOne({emailid:useremailid},function(err,userDetail){
+       //console.log(res.name+"-"+res.emailid+"-"+res.password);
+       done(err, userDetail);
+     });
+});
+
+passport.use(new LocalStrategy(
+  function(username, password, done) {
+    console.log('user:'+username+'pwd:'+password);
+    db.collection("users").findOne({emailid:username, password:password},function(userErr,userDomain){
+         //console.log(res.name+"-"+res.emailid+"-"+res.password);
+         console.log('userErr:'+userErr);
+         console.log('userDom:'+userDomain);
+         if(userErr) { return done(userErr); }
+         if (!userDomain) {
+           console.log('User not found');
+           return done(null, false, { errors: [{ msg: ['Incorrect Username/Password'] }] });
+         }
+         console.log('User found');
+         done(null, userDomain);
+       });
+  }
+));
+//passport stuffs - end
 
 router.get('/login', function(req, res) {
   res.render('login');
@@ -105,54 +133,61 @@ router.post('/signup', function(req, res) {
   }
 });
 
-// router.post('/login', function(req, res) {
-//       var email = req.body.email;
-//       var password = req.body.password;
-//       req.checkBody('email', 'Please enter valid email id').isEmail();
-//       req.checkBody('password', 'Please enter valid Password').notEmpty();
-//       var errors = req.validationErrors();
-//       console.log(email + '-' + password);
-//       if (errors) {
-//         res.render('login', {
-//           errors: errors
-//         });
-//         console.log('yes');
-//       } else {
-//             res.redirect('/'); //this redirect to dashboard
-//             console.log('no');
-//           }
-//       });
-passport.serializeUser(function(user, done) {
-  done(null, user.id);
+ // router.post('/login',passport.authenticate('local'),function(req,res){
+ //   res.redirect('/');
+ // });
+router.post('/login', function(req, res, next) {
+   passport.authenticate('local', function(err, user, info) {
+     if (err) { return next(err); }
+     if (!user) { return res.render('login',{ errors: [{ msg: ['Username/Password is wrong'] }] }); }
+     req.logIn(user, function(err) {
+       if (err) { return next(err); }
+       return res.redirect('/');
+     });
+   })(req, res, next);
 });
 
-passport.deserializeUser(function(id, done) {
-  User.getUserById(id, function(err, user) {
-    done(err, user);
+router.get('/logout', function(req, res){
+  console.log('logging out');
+  req.logout();
+  res.redirect('/');
+});
+
+router.get('/mypolls', function(req, res) {
+  if(!req.user) {return res.redirect('/user/login')};
+  var mysort = {_id:-1};
+  db.collection("polls").find({createdby:req.user.emailid}).sort(mysort).toArray(function(err, result){
+    if (err) {
+      throw err;
+    }
+    console.log(result);
+    res.render('mypolls',{
+      polls : result,
+      helpers: { json: function (context) { return JSON.stringify(context); }}
+    });
   });
 });
 
-router.post('/login',
-  passport.authenticate('local', {
-    succesRedirect: '/',
-    failureRedirect: '/user/login'
-  }));
-
-passport.use(new LocalStrategy(
-  function(username, password, done) {
-    console.log(username+'-'+password);
-    db.collection('users').count({emailid:username.toLowerCase(), password:password}, function(userErr, userRes){
-      if(userErr) throw userErr;
-      if (userRes ==0 ) {
-        console.log('no user found');
-        return done(null, false, {message: "Username/Password is wrong"});
-      } else {
-        console.log('found');
-        return done(null, true);
-      }
-    });
-
-  }
-));
+router.get('/delete/:id([a-z0-9]{24})', function(req, res) {
+  if(!req.user){return res.redirect('/user/login')};
+  var deletedCount = 0;
+  var del = {_id: new mongo.ObjectId(req.params.id)};
+  db.collection("polls").deleteOne(del, function(errr,obj){
+   if(errr) throw errr;
+   deletedCount = obj.deletedCount;
+   //console.log(obj.deletedCount);
+   //if(obj.deletedCount==1){res.render('mypolls')} else {res.render('mypolls')}
+   var mysort = {_id:-1};
+   db.collection("polls").find({createdby:req.user.emailid}).sort(mysort).toArray(function(err, result){
+     if (err) {
+       throw err;
+     }
+     res.render('mypolls',{
+       polls : result,
+       helpers: { json: function (context) { return JSON.stringify(context); }}
+     });
+   });
+  });
+});
 //This is to export this module to use in index.js
 module.exports = router;

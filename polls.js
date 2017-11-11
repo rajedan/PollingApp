@@ -34,7 +34,8 @@ router.post('/create', function(req, res) {
   var jsonData = {};
   //var jsonArray = [];
   jsonData['question'] = allData['question'];
-  jsonData['createdby'] = 'test-user';
+  if(!req.user) {return res.redirect('/user/login')}
+  jsonData['createdby'] = req.user.emailid;
   jsonData['options'] = [];
   for (var key in allData) {
     if (key.includes('option')) {

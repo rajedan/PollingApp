@@ -1,0 +1,43 @@
+{{#if polls}}
+<div class="table-responsive">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th class="col-md-1">#</th>
+        <th class="col-md-9">Question</th>
+        <th class="col-md-1">View</th>
+        <th class="col-md-1">Delete</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each polls}}
+      <tr>
+        <td>{{inc @index}}</td>
+        <td>{{this.question}}</td>
+
+        <td><a onClick="showPollDetail('{{json this}}'); return false;" href="#"><i class="glyphicon glyphicon-search"></i></a></td>
+        <td><a href="/user/delete/{{this._id}}"><i class="glyphicon glyphicon-trash"></i></a></td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</div>
+{{else}}
+<h3 class="text-center">You have not yet created any polls!</h3>
+{{/if}}
+<div class="modal fade" id="myPollModal" role="dialog">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header" style="background:#0accb8;color:#00000;">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title" id="question"><i class="glyphicon glyphicon-alert"></i></h4>
+      </div>
+      <div class="modal-body">
+        <p id="pollDetail"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
