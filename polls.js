@@ -125,7 +125,7 @@ router.post('/vote', function(req, res){
              });
            }
            var isInserted = updateRes.modifiedCount == 1;
-           var msg =  isInserted ? "Your precious vote has been successfully logged!" : "Failed to log your vote, please check with creater, whether poll exist!";
+           var msg =  isInserted ? "Your precious vote has been successfully logged!" : "Failed to log your vote!";
            res.render('error', {
              message: msg,
              status: isInserted

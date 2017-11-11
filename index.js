@@ -7,12 +7,14 @@ var user = require('./user.js');
 var dashboard = require('./dashboard.js');
 var userpolls = require('./userpolls.js');
 var polls = require('./polls.js');
+var expressValidator = require('express-validator');//the validator
 var app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
 }));
+app.use(expressValidator());//the validator
 app.use(express.static(path.join(__dirname,'public')));
 //view engine setup
 app.engine('.hbs',exphbs({defaultLayout: 'layout', extname: '.hbs'}));
