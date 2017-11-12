@@ -95,4 +95,43 @@ $(document).ready(function() {
     var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
     chart.draw(data, options);
   }
+
+        // $("#remove").click(function() {
+        //
+        //   var trIndex = $(this).closest("tr").index();
+        //   console.log("In remove, count is : " + trIndex);
+        //   $(this).closest("tr").remove();
+        //
+        //
+        // });
+
+        // $( "#table1" ).on( "click", ".delete_button", function(e) {
+        //   console.log("deleteing row");
+        //    e.preventDefault();
+        //    $( this ).parents( "tr" ).remove();
+        // });
+
+        // $("#table1").on('click', '.remove', function(){
+        //       console.log("deleteing row");
+        //       $(this).parent().parent().remove();
+        //   });
+
 });
+
+function deleteRow(r) {
+    console.log("deleteing row");
+    var i = r.parentNode.parentNode.rowIndex;
+      console.log("deleteing row"+i);
+    document.getElementById("table1").deleteRow(i);
+
+    updateRowCount();
+
+
+}
+
+function updateRowCount(){
+     var table = document.getElementById("table1");
+     var rowcountAfterDelete = document.getElementById("table1").rows.length;
+     for(var i=1;i<rowcountAfterDelete;i++){
+          table.rows[i].cells[0].innerHTML=i;
+      }}

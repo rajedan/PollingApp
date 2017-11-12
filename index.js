@@ -16,6 +16,12 @@ app.use(bodyParser.urlencoded({
 app.use(express.static(path.join(__dirname,'public')));
 //view engine setup
 app.engine('.hbs',exphbs({defaultLayout: 'layout', extname: '.hbs'}));
+
+app.engine('.hbs', exphbs({ defaultLayout: 'layout', extname: '.hbs', helpers: {
+  inc: function(value, options){
+    return parseInt(value) + 1;
+  }
+} }));
 app.set('view engine', '.hbs');
 
 app.use('/user', user);
