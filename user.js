@@ -180,5 +180,12 @@ router.get('/delete/:id([a-z0-9]{24})', function(req, res) {
    });
   });
 });
+
+router.get('/profile', function(req, res) {
+  if(!req.user){return res.redirect('/user/login')};
+  db.collection("users").findOne({emailid:req.user.emailid},function(err,userDetail){
+       res.render('profile',userDetail);
+    });
+});
 //This is to export this module to use in index.js
 module.exports = router;
