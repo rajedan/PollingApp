@@ -54,6 +54,8 @@ passport.use(new LocalStrategy(
 //passport stuffs - end
 
 router.get('/login', function(req, res) {
+  console.log("::"+req.user);
+  if(req.user){return res.redirect('/');}
   res.render('login');
 });
 
