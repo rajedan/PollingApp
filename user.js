@@ -16,7 +16,7 @@ var app = express();
 //app.use(session({ secret: "cats", resave: false, saveUninitialized: false }));
 //app.use(passport.initialize());
 //app.use(passport.session());
-app.use(flash());
+router.use(flash());
 
 MongoClient.connect(url, function(err, dbConnection) {
   if (err) {
@@ -106,10 +106,12 @@ router.post('/signup', function(req, res) {
           }
           console.log("Total inserted objects :" + insertResult.insertedCount);
           if (insertResult.insertedCount == 1) {
-            res.render('login', {
-              msg: "You have successfully registered! Please login now.",
-              success: true
-            });
+            req.flash('success_msg', 'You have successfully registered! Please login now.');
+            res.redirect('/user/login');
+            // res.render('login', {
+            //   msg: "You have successfully registered! Please login now.",
+            //   success: true
+            // });
           } else {
             res.render('register', {
               errors: [{

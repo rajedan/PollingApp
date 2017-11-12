@@ -14,8 +14,7 @@ var flash = require('connect-flash');
 var passport = require('passport');//
 var session      = require('express-session');//
 var app = express();
-// use connect-flash for flash messages stored in session
-app.use(flash());
+
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -25,13 +24,18 @@ app.use(expressValidator());//the validator
 app.use(express.static(path.join(__dirname,'public')));
 //passport stuffs
 app.use(session({ secret: "cats", resave: false, saveUninitialized: false }));
+// use connect-flash for flash messages stored in session
+app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
+
 //view engine setup
 app.engine('.hbs',exphbs({defaultLayout: 'layout', extname: '.hbs'}));
 app.set('view engine', '.hbs');
 //for user name setting
 app.use(function(req,res,next){
+  res.locals.success_msg = req.flash('success_msg');
+  res.locals.error_msg = req.flash('error_msg');
   res.locals.user = req.user || null;
   next();
 });
